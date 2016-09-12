@@ -8,12 +8,24 @@
 
 import UIKit
 
+extension UIScreen {
+    func onePixelSize() -> CGFloat {
+        return 1.0 / self.scale
+    }
+}
+
+enum DatePickerType {
+    case <#case#>
+}
+
+
 public class SCPopDatePicker: UIView {
 
     
     //Properties
     private var containerView: UIView!
     private var contentView: UIView!
+    
     
     //Custom Properties
     public var showBlur = true //Default Yes
@@ -23,7 +35,6 @@ public class SCPopDatePicker: UIView {
         self.backgroundColor = UIColor.clearColor()
     }
 
-    
     
     public func show(attachToView view: UIView) {
         self.show(self, inView: UIApplication.sharedApplication().keyWindow!)
@@ -37,12 +48,15 @@ public class SCPopDatePicker: UIView {
         self.containerView = UIView()
         self.containerView.frame = CGRectMake(0, 0, inView.bounds.width, inView.bounds.height)
         self.containerView.backgroundColor = UIColor.clearColor()
+        self.containerView.layer.cornerRadius = 7.5
         
         inView.addSubview(self.containerView)
         
         if showBlur {
             _showBlur()
         }
+        
+        self.containerView.addSubview(createDatePicker())
     }
     
     private func _showBlur() {
@@ -54,6 +68,13 @@ public class SCPopDatePicker: UIView {
         self.containerView.addSubview(blurEffectView)
 
     }
+    
+    private func createDatePicker() -> UIDatePicker {
+        let datePickerView: UIDatePicker = UIDatePicker(frame: CGRect(x: 5, y: self.containerView.frame.height / 2, width: self.containerView.bounds.width, height: self.containerView.bounds.height / 2))
+        datePickerView.backgroundColor = UIColor.whiteColor()
+        return datePickerView
+    }
+    
     
     public override func drawRect(rect: CGRect) {
         super.drawRect(rect)
