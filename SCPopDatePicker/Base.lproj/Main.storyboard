@@ -17,11 +17,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="search" translatesAutoresizingMaskIntoConstraints="NO" id="Ri9-fR-gfg">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="search" translatesAutoresizingMaskIntoConstraints="NO" id="Ri9-fR-gfg">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Ri9-fR-gfg" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="0S0-yw-WvS"/>
+                            <constraint firstItem="Ri9-fR-gfg" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="dcN-at-QE7"/>
+                            <constraint firstItem="Ri9-fR-gfg" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="qv5-o9-3w2"/>
+                            <constraint firstAttribute="trailing" secondItem="Ri9-fR-gfg" secondAttribute="trailing" id="xwi-Y0-KYc"/>
+                        </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                 </viewController>

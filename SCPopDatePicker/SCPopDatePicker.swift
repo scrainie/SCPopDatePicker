@@ -14,10 +14,17 @@ extension UIScreen {
     }
 }
 
-enum DatePickerType {
-    case <#case#>
+//DatePicker Mode
+public enum SCDatePickerType {
+    case date, time, countdown
+    public func dateType() -> UIDatePickerMode {
+        switch self {
+        case SCDatePickerType.date: return .Date
+        case SCDatePickerType.time: return .DateAndTime
+        case SCDatePickerType.countdown: return .CountDownTimer
+        }
+    }
 }
-
 
 public class SCPopDatePicker: UIView {
 
@@ -25,14 +32,17 @@ public class SCPopDatePicker: UIView {
     //Properties
     private var containerView: UIView!
     private var contentView: UIView!
-    
+    private var datePickerView: UIDatePicker!
     
     //Custom Properties
     public var showBlur = true //Default Yes
+    public var datePickerType: SCDatePickerType!
+    public var tapToDismiss = true //Default Yes
     
     public init() {
         super.init(frame: CGRect.zero)
         self.backgroundColor = UIColor.clearColor()
+        
     }
 
     
@@ -45,10 +55,15 @@ public class SCPopDatePicker: UIView {
 
         self.contentView = inView
         
+        if tapToDismiss {
+            let tap = UITapGestureRecognizer(target: self, action: #selector(SCPopDatePicker.dismiss(_:)))
+            self.contentView.addGestureRecognizer(tap)
+        }
+        
         self.containerView = UIView()
         self.containerView.frame = CGRectMake(0, 0, inView.bounds.width, inView.bounds.height)
         self.containerView.backgroundColor = UIColor.clearColor()
-        self.containerView.layer.cornerRadius = 7.5
+    
         
         inView.addSubview(self.containerView)
         
@@ -56,9 +71,16 @@ public class SCPopDatePicker: UIView {
             _showBlur()
         }
         
-        self.containerView.addSubview(createDatePicker())
+        self.datePickerView = createDatePicker()
+        self.containerView.addSubview(self.datePickerView)
     }
     
+    //Handle Tap Dismiss
+    func dismiss(sender: UITapGestureRecognizer? = nil) {
+        print("view tapped")
+    }
+    
+    //Show Blur Effect
     private func _showBlur() {
     
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Light)
@@ -69,9 +91,12 @@ public class SCPopDatePicker: UIView {
 
     }
     
+    //Create DatePicker
     private func createDatePicker() -> UIDatePicker {
-        let datePickerView: UIDatePicker = UIDatePicker(frame: CGRect(x: 5, y: self.containerView.frame.height / 2, width: self.containerView.bounds.width, height: self.containerView.bounds.height / 2))
+        let datePickerView: UIDatePicker = UIDatePicker(frame: CGRect(x: 0, y: CGRectGetMaxY(self.containerView.frame) - 216, width: self.containerView.bounds.width, height: 216))
+        datePickerView.clipsToBounds = true
         datePickerView.backgroundColor = UIColor.whiteColor()
+        datePickerView.datePickerMode = self.datePickerType.dateType()
         return datePickerView
     }
     

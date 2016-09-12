@@ -27,6 +27,8 @@ class ViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         
+        datePicker.tapToDismiss = true
+        datePicker.datePickerType = SCDatePickerType.date
         datePicker.showBlur = true
         datePicker.show(attachToView: self.view)
         
