@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, SCPopDatePickerDelegate {
 
     
     let datePicker = SCPopDatePicker()
@@ -27,11 +27,17 @@ class ViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         
-        datePicker.tapToDismiss = true
-        datePicker.datePickerType = SCDatePickerType.date
-        datePicker.showBlur = true
+        datePicker.tapToDismiss = true //Optional
+        datePicker.datePickerType = SCDatePickerType.date //Optional
+        datePicker.showBlur = true // Optional
+        datePicker.btnFontColour = UIColor.redColor() //Optional
+        datePicker.delegate = self
         datePicker.show(attachToView: self.view)
         
+    }
+    
+    func scPopDatePickerDidSelectDate(date: NSDate) {
+        print(date)
     }
     
     override func didReceiveMemoryWarning() {

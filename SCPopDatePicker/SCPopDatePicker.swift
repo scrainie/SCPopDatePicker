@@ -8,11 +8,10 @@
 
 import UIKit
 
-extension UIScreen {
-    func onePixelSize() -> CGFloat {
-        return 1.0 / self.scale
-    }
+protocol SCPopDatePickerDelegate: NSObjectProtocol {
+    func scPopDatePickerDidSelectDate(date: NSDate)
 }
+
 
 //DatePicker Mode
 public enum SCDatePickerType {
@@ -28,6 +27,8 @@ public enum SCDatePickerType {
 
 public class SCPopDatePicker: UIView {
 
+    //Delegate
+    var delegate: SCPopDatePickerDelegate?
     
     //Properties
     private var containerView: UIView!
@@ -39,6 +40,7 @@ public class SCPopDatePicker: UIView {
     public var showBlur = true //Default Yes
     public var datePickerType: SCDatePickerType!
     public var tapToDismiss = true //Default Yes
+    public var btnFontColour = UIColor.blueColor() //Default Blue
     
     public init() {
         super.init(frame: CGRect.zero)
@@ -64,7 +66,7 @@ public class SCPopDatePicker: UIView {
         self.containerView = UIView()
         self.containerView.frame = CGRectMake(0, 0, inView.bounds.width, inView.bounds.height)
         self.containerView.backgroundColor = UIColor.clearColor()
-    
+        self.containerView.alpha = 0
         
         inView.addSubview(self.containerView)
         
@@ -77,11 +79,36 @@ public class SCPopDatePicker: UIView {
         
         self.datePickerView = createDatePicker()
         self.backgroundView.addSubview(self.datePickerView)
+        self.backgroundView.addSubview(self.addSelectButton())
+        
+        //Show UI Views
+        UIView.animateWithDuration(0.15, animations: {
+            self.containerView.alpha = 1
+        }) { (success:Bool) in
+            UIView.animateWithDuration(0.15, delay: 0, options: .TransitionCrossDissolve, animations: {
+                self.backgroundView.frame.origin.y = self.containerView.bounds.height / 2 - 125
+                }, completion: { (success:Bool) in
+            })
+        }
     }
+    
     
     //Handle Tap Dismiss
     func dismiss(sender: UITapGestureRecognizer? = nil) {
-        print("view tapped")
+        UIView.animateWithDuration(0.15, animations: {
+            self.backgroundView.frame.origin.y += CGRectGetMaxY(self.containerView.bounds)
+        }) { (success:Bool) in
+            
+            UIView.animateWithDuration(0.15, delay: 0, options: .TransitionCrossDissolve, animations: {
+                    self.containerView.alpha = 0
+                }, completion: { (success:Bool) in
+                    self.containerView.removeFromSuperview()
+                    self.contentView.removeGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(SCPopDatePicker.dismiss(_:))))
+            })
+
+        }
+        
+        
     }
     
     //Show Blur Effect
@@ -97,30 +124,55 @@ public class SCPopDatePicker: UIView {
     
     //Create DatePicker
     private func createDatePicker() -> UIDatePicker {
-        let datePickerView: UIDatePicker = UIDatePicker(frame: CGRect(x: 0, y: 0, width: self.backgroundView.bounds.width, height: self.backgroundView.bounds.height))
+        let datePickerView: UIDatePicker = UIDatePicker(frame: CGRect(x: 0, y: -60, width: self.backgroundView.bounds.width, height: self.backgroundView.bounds.height))
         datePickerView.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
+        datePickerView.layer.cornerRadius = 10.0
         datePickerView.clipsToBounds = true
         datePickerView.backgroundColor = UIColor.whiteColor()
         datePickerView.datePickerMode = self.datePickerType.dateType()
         return datePickerView
     }
-    
+    //
     //Create Background Container View
     private func createBackgroundView() -> UIView {
-        
-        let bgView = UIView(frame: CGRect(x: self.containerView.frame.width / 2 - 150, y: self.containerView.bounds.height / 2 - 125, width: 300, height: 250))
-        bgView.autoresizingMask = [.FlexibleWidth]
+        let bgView = UIView(frame: CGRect(x: self.containerView.frame.width / 2 - 150, y: CGRectGetMaxY(self.containerView.bounds) + 100, width: 300, height: 150))
+        bgView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         bgView.backgroundColor = UIColor.whiteColor()
         bgView.layer.shadowOffset = CGSize(width: 3, height: 3)
         bgView.layer.shadowOpacity = 0.7
         bgView.layer.shadowRadius = 2
+        bgView.layer.cornerRadius = 10.0
         
         return bgView
     }
     
+    private func addSelectButton() -> UIButton {
+        
+        let btn = UIButton(type: .System)
+        btn.frame = CGRect(x: self.backgroundView.frame.width / 2 - 150, y: 100, width: 300, height: 30)
+        btn.setTitle("Select", forState: .Normal)
+        btn.titleLabel?.font = UIFont.systemFontOfSize(20)
+        btn.tintColor = self.btnFontColour
+        btn.addTarget(self, action: #selector(SCPopDatePicker.didSelectDate(_:)), forControlEvents: .TouchUpInside)
+        
+        return btn
+    }
+    
+    @objc private func didSelectDate(sender: UIButton) {
+        if delegate != nil {
+            self.delegate?.scPopDatePickerDidSelectDate(self.datePickerView.date)
+            self.dismiss()
+        }
+    }
+    
     public override func drawRect(rect: CGRect) {
         super.drawRect(rect)
+
+        
+        
     }
+    
+    
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
