@@ -85,7 +85,7 @@ public class SCPopDatePicker: UIView {
         UIView.animateWithDuration(0.15, animations: {
             self.containerView.alpha = 1
         }) { (success:Bool) in
-            UIView.animateWithDuration(0.15, delay: 0, options: .TransitionCrossDissolve, animations: {
+            UIView.animateWithDuration(0.30, delay: 0, options: .TransitionCrossDissolve, animations: {
                 self.backgroundView.frame.origin.y = self.containerView.bounds.height / 2 - 125
                 }, completion: { (success:Bool) in
             })
@@ -99,7 +99,7 @@ public class SCPopDatePicker: UIView {
             self.backgroundView.frame.origin.y += CGRectGetMaxY(self.containerView.bounds)
         }) { (success:Bool) in
             
-            UIView.animateWithDuration(0.15, delay: 0, options: .TransitionCrossDissolve, animations: {
+            UIView.animateWithDuration(0.05, delay: 0, options: .TransitionCrossDissolve, animations: {
                     self.containerView.alpha = 0
                 }, completion: { (success:Bool) in
                     self.containerView.removeFromSuperview()
