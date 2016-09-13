@@ -32,6 +32,7 @@ public class SCPopDatePicker: UIView {
     //Properties
     private var containerView: UIView!
     private var contentView: UIView!
+    private var backgroundView: UIView!
     private var datePickerView: UIDatePicker!
     
     //Custom Properties
@@ -50,7 +51,7 @@ public class SCPopDatePicker: UIView {
         self.show(self, inView: UIApplication.sharedApplication().keyWindow!)
     }
 
-    
+    //Show View
     private func show(contentView: UIView, inView: UIView) {
 
         self.contentView = inView
@@ -71,8 +72,11 @@ public class SCPopDatePicker: UIView {
             _showBlur()
         }
         
+        self.backgroundView = createBackgroundView()
+        self.containerView.addSubview(self.backgroundView)
+        
         self.datePickerView = createDatePicker()
-        self.containerView.addSubview(self.datePickerView)
+        self.backgroundView.addSubview(self.datePickerView)
     }
     
     //Handle Tap Dismiss
@@ -93,13 +97,26 @@ public class SCPopDatePicker: UIView {
     
     //Create DatePicker
     private func createDatePicker() -> UIDatePicker {
-        let datePickerView: UIDatePicker = UIDatePicker(frame: CGRect(x: 0, y: CGRectGetMaxY(self.containerView.frame) - 216, width: self.containerView.bounds.width, height: 216))
+        let datePickerView: UIDatePicker = UIDatePicker(frame: CGRect(x: 0, y: 0, width: self.backgroundView.bounds.width, height: self.backgroundView.bounds.height))
+        datePickerView.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
         datePickerView.clipsToBounds = true
         datePickerView.backgroundColor = UIColor.whiteColor()
         datePickerView.datePickerMode = self.datePickerType.dateType()
         return datePickerView
     }
     
+    //Create Background Container View
+    private func createBackgroundView() -> UIView {
+        
+        let bgView = UIView(frame: CGRect(x: self.containerView.frame.width / 2 - 150, y: self.containerView.bounds.height / 2 - 125, width: 300, height: 250))
+        bgView.autoresizingMask = [.FlexibleWidth]
+        bgView.backgroundColor = UIColor.whiteColor()
+        bgView.layer.shadowOffset = CGSize(width: 3, height: 3)
+        bgView.layer.shadowOpacity = 0.7
+        bgView.layer.shadowRadius = 2
+        
+        return bgView
+    }
     
     public override func drawRect(rect: CGRect) {
         super.drawRect(rect)
