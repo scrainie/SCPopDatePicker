@@ -3,7 +3,7 @@
 1. Drag and drop SCPopDatePicker.swift into project.
 2. Add SCPopDatePickerDelegate to ViewController
 
-# Usage
+#Usage
 ```Swift
         let datePicker = SCPopDatePicker()
         datePicker.tapToDismiss = true //Optional
@@ -12,6 +12,12 @@
         datePicker.btnFontColour = UIColor.redColor() //Optional
         datePicker.delegate = self
         datePicker.show(attachToView: self.view)
- ```
- # Delegate Protocol
- ```Swift
+```
+#Delegate Protocol
+
+```Swift
+ func scPopDatePickerDidSelectDate(date: NSDate) {
+        
+        //returns NSDate
+ }
+```
