@@ -165,15 +165,7 @@ public class SCPopDatePicker: UIView {
         }
     }
     
-    public override func drawRect(rect: CGRect) {
-        super.drawRect(rect)
-
-        
-        
-    }
-    
-    
-    
+       
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
