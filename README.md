@@ -21,3 +21,14 @@
         //returns NSDate
  }
 ```
+#Optionals
+```Swift
+    public var showBlur = true //Default Yes
+    public var datePickerType: SCDatePickerType!
+    public var tapToDismiss = true //Default Yes
+    public var btnFontColour = UIColor.blueColor() //Default Blue
+    public var btnColour = UIColor.clearColor() //Default Clear
+    public var datePickerStartDate = NSDate() //Optional
+    public var showShadow = true //Optional
+    public var showCornerRadius = true // Optional
+```
