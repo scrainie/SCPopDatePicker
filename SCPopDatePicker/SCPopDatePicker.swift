@@ -41,6 +41,7 @@ public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
     public var datePickerType: SCDatePickerType!
     public var tapToDismiss = true //Default Yes
     public var btnFontColour = UIColor.blueColor() //Default Blue
+    public var btnColour = UIColor.clearColor() //Default Clear
     public var datePickerStartDate = NSDate() //Optional
     public var showShadow = true //Optional
     public var showCornerRadius = true // Optional
@@ -76,12 +77,22 @@ public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
         }
         
         self.backgroundView = createBackgroundView()
-        
         self.containerView.addSubview(self.backgroundView)
         
         self.datePickerView = createDatePicker()
         self.backgroundView.addSubview(self.datePickerView)
+        
+        //Round .Left / .Right Corners of DatePicker View
+        if showCornerRadius {
+            let path = UIBezierPath(roundedRect:self.datePickerView.bounds, byRoundingCorners:[.TopRight, .TopLeft], cornerRadii: CGSizeMake(10, 10))
+            let maskLayer = CAShapeLayer()
+            
+            maskLayer.path = path.CGPath
+            self.datePickerView.layer.mask = maskLayer
+        }
+        
         self.backgroundView.addSubview(self.addSelectButton())
+        
         
         //Show UI Views
         UIView.animateWithDuration(0.15, animations: {
@@ -91,8 +102,6 @@ public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
                 self.backgroundView.frame.origin.y = self.containerView.bounds.height / 2 - 125
                 }, completion: { (success:Bool) in
                     
-                    print(self.datePickerView.frame.maxY)
-                    print(self.backgroundView.frame.maxY)
             })
         }
         
@@ -101,6 +110,8 @@ public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
             tap.delegate = self
             self.containerView.addGestureRecognizer(tap)
         }
+        
+        self.layoutSubviews()
     }
     
     
@@ -137,10 +148,9 @@ public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
     
     //Create DatePicker
     private func createDatePicker() -> UIDatePicker {
-        let datePickerView: UIDatePicker = UIDatePicker(frame: CGRect(x: 0, y: -60, width: self.backgroundView.bounds.width, height: self.backgroundView.bounds.height))
+        let datePickerView: UIDatePicker = UIDatePicker(frame: CGRect(x: 0, y: 0, width: self.backgroundView.bounds.width, height: self.backgroundView.bounds.height))
         datePickerView.date = self.datePickerStartDate
-        datePickerView.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
-        datePickerView.layer.cornerRadius = 10.0
+        datePickerView.autoresizingMask = [.FlexibleWidth]
         datePickerView.clipsToBounds = true
         datePickerView.backgroundColor = UIColor.whiteColor()
         datePickerView.datePickerMode = self.datePickerType.dateType()
@@ -149,8 +159,8 @@ public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
     //
     //Create Background Container View
     private func createBackgroundView() -> UIView {
-        let bgView = UIView(frame: CGRect(x: self.containerView.frame.width / 2 - 150, y: CGRectGetMaxY(self.containerView.bounds) + 100, width: 300, height: 150))
-        bgView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        let bgView = UIView(frame: CGRect(x: self.containerView.frame.width / 2 - 150, y: CGRectGetMaxY(self.containerView.bounds) + 100, width: 300, height: 160))
+        bgView.autoresizingMask = [.FlexibleWidth]
         bgView.backgroundColor = UIColor.whiteColor()
         
         if showShadow {
@@ -167,11 +177,11 @@ public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
     private func addSelectButton() -> UIButton {
         
         let btn = UIButton(type: .System)
-        btn.frame = CGRect(x: self.backgroundView.frame.width / 2 - 150, y: self.datePickerView.frame.maxY, width: self.backgroundView.frame.size.width, height: 68)
+        btn.frame = CGRect(x: self.backgroundView.frame.width / 2 - 150, y: self.datePickerView.frame.maxY, width: self.backgroundView.frame.size.width, height: 48)
         btn.setTitle("Select", forState: .Normal)
         btn.titleLabel?.font = UIFont.systemFontOfSize(20)
         btn.tintColor = self.btnFontColour
-        btn.backgroundColor = UIColor.lightGrayColor()
+        btn.backgroundColor = self.btnColour
         btn.addTarget(self, action: #selector(SCPopDatePicker.didSelectDate(_:)), forControlEvents: .TouchUpInside)
         
         if showCornerRadius {
