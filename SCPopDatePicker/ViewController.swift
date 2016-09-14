@@ -32,7 +32,7 @@ class ViewController: UIViewController, SCPopDatePickerDelegate {
         self.datePicker.btnColour = UIColor.blackColor()
         self.datePicker.showCornerRadius = false
         self.datePicker.delegate = self
-        
+        self.datePicker.show(attachToView: self.view)
     }
     
     func scPopDatePickerDidSelectDate(date: NSDate) {
