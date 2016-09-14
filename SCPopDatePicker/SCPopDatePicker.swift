@@ -1,7 +1,7 @@
 import UIKit
 
 protocol SCPopDatePickerDelegate: NSObjectProtocol {
-    func scPopDatePickerDidSelectDate(date: NSDate)
+    func scPopDatePickerDidSelectDate(_ date: Date)
 }
 
 
@@ -10,55 +10,55 @@ public enum SCDatePickerType {
     case date, time, countdown
     public func dateType() -> UIDatePickerMode {
         switch self {
-        case SCDatePickerType.date: return .Date
-        case SCDatePickerType.time: return .DateAndTime
-        case SCDatePickerType.countdown: return .CountDownTimer
+        case SCDatePickerType.date: return .date
+        case SCDatePickerType.time: return .dateAndTime
+        case SCDatePickerType.countdown: return .countDownTimer
         }
     }
 }
 
-public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
+open class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
     
     //Delegate
     var delegate: SCPopDatePickerDelegate?
     
     //Properties
-    private var containerView: UIView!
-    private var contentView: UIView!
-    private var backgroundView: UIView!
-    private var datePickerView: UIDatePicker!
+    fileprivate var containerView: UIView!
+    fileprivate var contentView: UIView!
+    fileprivate var backgroundView: UIView!
+    fileprivate var datePickerView: UIDatePicker!
     
     //Custom Properties
-    public var showBlur = true //Default Yes
-    public var datePickerType: SCDatePickerType!
-    public var tapToDismiss = true //Default Yes
-    public var btnFontColour = UIColor.blueColor() //Default Blue
-    public var btnColour = UIColor.clearColor() //Default Clear
-    public var datePickerStartDate = NSDate() //Optional
-    public var showShadow = true //Optional
-    public var showCornerRadius = true // Optional
+    open var showBlur = true //Default Yes
+    open var datePickerType: SCDatePickerType!
+    open var tapToDismiss = true //Default Yes
+    open var btnFontColour = UIColor.blue //Default Blue
+    open var btnColour = UIColor.clear //Default Clear
+    open var datePickerStartDate = Date() //Optional
+    open var showShadow = true //Optional
+    open var showCornerRadius = true // Optional
     
     
     public init() {
         super.init(frame: CGRect.zero)
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear
         
     }
     
     
     
-    public func show(attachToView view: UIView) {
+    open func show(attachToView view: UIView) {
         self.show(self, inView: view)
     }
     
     //Show View
-    private func show(contentView: UIView, inView: UIView) {
+    fileprivate func show(_ contentView: UIView, inView: UIView) {
         
         self.contentView = inView
         
         self.containerView = UIView()
-        self.containerView.frame = CGRectMake(0, 0, inView.bounds.width, inView.bounds.height)
-        self.containerView.backgroundColor = UIColor.clearColor()
+        self.containerView.frame = CGRect(x: 0, y: 0, width: inView.bounds.width, height: inView.bounds.height)
+        self.containerView.backgroundColor = UIColor.clear
         self.containerView.alpha = 0
         
         self.contentView.addSubview(self.containerView)
@@ -76,10 +76,10 @@ public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
         
         //Round .Left / .Right Corners of DatePicker View
         if showCornerRadius {
-            let path = UIBezierPath(roundedRect:self.datePickerView.bounds, byRoundingCorners:[.TopRight, .TopLeft], cornerRadii: CGSizeMake(10, 10))
+            let path = UIBezierPath(roundedRect:self.datePickerView.bounds, byRoundingCorners:[.topRight, .topLeft], cornerRadii: CGSize(width: 10, height: 10))
             let maskLayer = CAShapeLayer()
             
-            maskLayer.path = path.CGPath
+            maskLayer.path = path.cgPath
             self.datePickerView.layer.mask = maskLayer
         }
         
@@ -87,15 +87,15 @@ public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
         
         
         //Show UI Views
-        UIView.animateWithDuration(0.15, animations: {
+        UIView.animate(withDuration: 0.15, animations: {
             self.containerView.alpha = 1
-        }) { (success:Bool) in
-            UIView.animateWithDuration(0.30, delay: 0, options: .TransitionCrossDissolve, animations: {
+        }, completion: { (success:Bool) in
+            UIView.animate(withDuration: 0.30, delay: 0, options: .transitionCrossDissolve, animations: {
                 self.backgroundView.frame.origin.y = self.containerView.bounds.height / 2 - 125
                 }, completion: { (success:Bool) in
                     
             })
-        }
+        }) 
         
         if tapToDismiss {
             let tap = UITapGestureRecognizer(target: self, action: #selector(SCPopDatePicker.dismiss(_:)))
@@ -108,13 +108,13 @@ public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
     
     
     //Handle Tap Dismiss
-    func dismiss(sender: UITapGestureRecognizer? = nil) {
+    func dismiss(_ sender: UITapGestureRecognizer? = nil) {
         
-        UIView.animateWithDuration(0.15, animations: {
-            self.backgroundView.frame.origin.y += CGRectGetMaxY(self.containerView.bounds)
-        }) { (success:Bool) in
+        UIView.animate(withDuration: 0.15, animations: {
+            self.backgroundView.frame.origin.y += self.containerView.bounds.maxY
+        }, completion: { (success:Bool) in
             
-            UIView.animateWithDuration(0.05, delay: 0, options: .TransitionCrossDissolve, animations: {
+            UIView.animate(withDuration: 0.05, delay: 0, options: .transitionCrossDissolve, animations: {
                 self.containerView.alpha = 0
                 }, completion: { (success:Bool) in
                     self.containerView.removeGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(SCPopDatePicker.dismiss(_:))))
@@ -122,38 +122,38 @@ public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
                     self.removeFromSuperview()
             })
             
-        }
+        }) 
         
         
     }
     
     //Show Blur Effect
-    private func _showBlur() {
+    fileprivate func _showBlur() {
         
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = self.contentView.bounds
-        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight] // for supporting device rotation
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight] // for supporting device rotation
         self.containerView.addSubview(blurEffectView)
         
     }
     
     //Create DatePicker
-    private func createDatePicker() -> UIDatePicker {
+    fileprivate func createDatePicker() -> UIDatePicker {
         let datePickerView: UIDatePicker = UIDatePicker(frame: CGRect(x: 0, y: -60, width: self.backgroundView.bounds.width, height: self.backgroundView.bounds.height))
         datePickerView.date = self.datePickerStartDate
-        datePickerView.autoresizingMask = [.FlexibleWidth]
+        datePickerView.autoresizingMask = [.flexibleWidth]
         datePickerView.clipsToBounds = true
-        datePickerView.backgroundColor = UIColor.whiteColor()
+        datePickerView.backgroundColor = UIColor.white
         datePickerView.datePickerMode = self.datePickerType.dateType()
         return datePickerView
     }
     //
     //Create Background Container View
-    private func createBackgroundView() -> UIView {
-        let bgView = UIView(frame: CGRect(x: self.containerView.frame.width / 2 - 150, y: CGRectGetMaxY(self.containerView.bounds) + 100, width: 300, height: 160))
-        bgView.autoresizingMask = [.FlexibleWidth]
-        bgView.backgroundColor = UIColor.clearColor()
+    fileprivate func createBackgroundView() -> UIView {
+        let bgView = UIView(frame: CGRect(x: self.containerView.frame.width / 2 - 150, y: self.containerView.bounds.maxY + 100, width: 300, height: 160))
+        bgView.autoresizingMask = [.flexibleWidth]
+        bgView.backgroundColor = UIColor.clear
         
         if showShadow {
             bgView.layer.shadowOffset = CGSize(width: 3, height: 3)
@@ -166,22 +166,22 @@ public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
         return bgView
     }
     
-    private func addSelectButton() -> UIButton {
+    fileprivate func addSelectButton() -> UIButton {
         
-        let btn = UIButton(type: .System)
+        let btn = UIButton(type: .system)
         btn.frame = CGRect(x: self.backgroundView.frame.width / 2 - 150, y: self.datePickerView.frame.maxY, width: self.backgroundView.frame.size.width, height: 48)
-        btn.setTitle("Select", forState: .Normal)
-        btn.titleLabel?.font = UIFont.systemFontOfSize(20)
+        btn.setTitle("Select", for: UIControlState())
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         btn.tintColor = self.btnFontColour
         btn.backgroundColor = self.btnColour
-        btn.addTarget(self, action: #selector(SCPopDatePicker.didSelectDate(_:)), forControlEvents: .TouchUpInside)
+        btn.addTarget(self, action: #selector(SCPopDatePicker.didSelectDate(_:)), for: .touchUpInside)
         
         //Round .Left / .Right Corners of DatePicker View
         if showCornerRadius {
-            let path = UIBezierPath(roundedRect: btn.bounds, byRoundingCorners:[.BottomRight, .BottomLeft], cornerRadii: CGSizeMake(10, 10))
+            let path = UIBezierPath(roundedRect: btn.bounds, byRoundingCorners:[.bottomRight, .bottomLeft], cornerRadii: CGSize(width: 10, height: 10))
             let maskLayer = CAShapeLayer()
             
-            maskLayer.path = path.CGPath
+            maskLayer.path = path.cgPath
             btn.layer.mask = maskLayer
         }
 
@@ -189,7 +189,7 @@ public class SCPopDatePicker: UIView, UIGestureRecognizerDelegate {
         return btn
     }
     
-    @objc private func didSelectDate(sender: UIButton) {
+    @objc fileprivate func didSelectDate(_ sender: UIButton) {
         if delegate != nil {
             self.delegate?.scPopDatePickerDidSelectDate(self.datePickerView.date)
             self.dismiss()
