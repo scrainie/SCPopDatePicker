@@ -12,7 +12,7 @@ class ViewController: UIViewController, SCPopDatePickerDelegate {
 
     
     let datePicker = SCPopDatePicker()
-    
+    let date = NSDate()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,11 +25,11 @@ class ViewController: UIViewController, SCPopDatePickerDelegate {
         super.viewDidAppear(true)
         
         self.datePicker.tapToDismiss = true
-        self.datePicker.datePickerStartDate = NSDate()
         self.datePicker.datePickerType = SCDatePickerType.date
         self.datePicker.showBlur = true
+        self.datePicker.datePickerStartDate = self.date
         self.datePicker.btnFontColour = UIColor.whiteColor()
-        self.datePicker.btnColour = UIColor.blackColor()
+        self.datePicker.btnColour = UIColor.darkGrayColor()
         self.datePicker.showCornerRadius = false
         self.datePicker.delegate = self
         self.datePicker.show(attachToView: self.view)
