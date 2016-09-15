@@ -20,10 +20,8 @@ class ViewController: UIViewController, SCPopDatePickerDelegate {
 
     }
 
+    @IBAction func showDatePicker(sender: UIButton) {
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        
         self.datePicker.tapToDismiss = true
         self.datePicker.datePickerType = SCDatePickerType.date
         self.datePicker.showBlur = true
@@ -33,7 +31,14 @@ class ViewController: UIViewController, SCPopDatePickerDelegate {
         self.datePicker.showCornerRadius = false
         self.datePicker.delegate = self
         self.datePicker.show(attachToView: self.view)
+
+    
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
+            }
     
     func scPopDatePickerDidSelectDate(_ date: Date) {
         print(date)
