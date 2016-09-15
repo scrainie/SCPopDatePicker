@@ -1,5 +1,5 @@
 # SCPopDatePicker
-
+Simple UIDatePicker -> Requires Swift 3.0
 1. Drag and drop SCPopDatePicker.swift into project.
 2. Add SCPopDatePickerDelegate to ViewController
 
